@@ -1,65 +1,125 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+import Link from "next/link"; // Replaced useRouter
+import styled from "styled-components";
+
+// --- STYLED COMPONENTS ---
+
+const BauhausWrapper = styled.main`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #F4F4F4;
+    font-family: 'Courier New', Courier, monospace;
+    color: #1A1A1A;
+`;
+
+const ContentBox = styled.div`
+    border: 4px solid #1A1A1A;
+    padding: 3vh;
+    background: #FFFFFF;
+    box-shadow: 12px 12px 0px #1A1A1A;
+    max-width: 500px;
+    width: 90%;
+`;
+
+const Title = styled.h1`
+    font-size: calc(2px + 3vw);
+    font-weight: 900;
+    margin-bottom: 2vh;
+    text-transform: uppercase;
+    line-height: 1;
+    border-left: 10px solid #E30613;
+    padding-left: 1vh;
+`;
+
+const Subtitle = styled.p`
+    font-size: calc(2px + 1vw);
+    font-weight: 400;
+    margin-bottom: 2vh;
+    margin-top: -1.5vh;
+    text-transform: uppercase;
+    color: #00539C;
+    letter-spacing: 1px;
+`;
+
+const Form = styled.form`
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+`;
+
+const Input = styled.input`
+    border: 2px solid #1A1A1A;
+    padding: 1vh;
+    font-size: calc(2px + 1.2vw);
+    outline: none;
+    background: #FFD500;
+    font-family: inherit;
+    text-transform: uppercase;
+
+    &::placeholder {
+        color: rgba(26, 26, 26, 0.6);
+        font-weight: bold;
+    }
+
+    &:focus {
+        background: #FFFFFF;
+    }
+`;
+
+// Changed from button to 'a' styled-component to work with Link
+const StyledSearchLink = styled(Link)`
+    background: #00539C;
+    color: #FFFFFF;
+    border: 2px solid #1A1A1A;
+    padding: 1vh;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-family: inherit;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    
+    &:hover {
+        background: #1A1A1A;
+        transform: translate(-2px, -2px);
+        box-shadow: 4px 4px 0px #E30613;
+    }
+
+    &:active {
+        transform: translate(0, 0);
+        box-shadow: none;
+    }
+`;
+
+// --- PAGE COMPONENT ---
 
 export default function Home() {
-  return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+    const [input, setInput] = useState("");
+
+    return (
+        <BauhausWrapper>
+            <ContentBox>
+                <Title>FILM<br/>INDEX</Title>
+                <Subtitle>An archive of cinematic works</Subtitle>
+
+                <Form onSubmit={(e) => e.preventDefault()}>
+                    {/* search bar, put the text in the box when it's typed */}
+                    <Input 
+                        value={input} 
+                        onChange={(e) => setInput(e.target.value)} 
+                        placeholder="INPUT TITLE..." 
+                    />
+                    {/* The Link generates the URL dynamically based on the state */}
+                    <StyledSearchLink href={`/search?query=${encodeURIComponent(input)}`}>
+                        SEARCH
+                    </StyledSearchLink>
+                </Form>
+            </ContentBox>
+        </BauhausWrapper>
+    );
 }
