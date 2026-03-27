@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
 import MovieCard from "../components/movieCard";
 import { Movie } from "../interfaces/movie";
 import styled from "styled-components";
 import useSWR from 'swr';
+import { Suspense } from "react";
 
 // --- STYLED COMPONENTS PORTION ---
 
@@ -101,7 +101,9 @@ const StyledLink = styled(Link)`
 
 // --- PAGE COMPONENT ---
 
-export default function SearchResults() {
+function SearchResultsContent() {
+    // https://nextjs.org/docs/app/api-reference/functions/use-search-params
+    // to help with my searching and actually let me use the query
     const searchParams = useSearchParams();
     const query = searchParams.get("query");
 
@@ -146,7 +148,7 @@ export default function SearchResults() {
                 {movies.length > 0 ? (
                     // map the movies to card info
                     movies.map((movie: Movie) => (
-                        
+
                         <MovieCard key={movie.id} {...movie} />
                     ))
                 ) : (
@@ -154,5 +156,20 @@ export default function SearchResults() {
                 )}
             </ResultsContainer>
         </PageWrapper>
+    );
+}
+
+// as suggested by vercel errors
+// and this https://react.dev/reference/react/Suspense
+export default function SearchResults() {
+    return (
+        // suspense from react stuff
+        <Suspense fallback={
+            <PageWrapper>
+                <StatusMessage $variant="loading">Initializing_System...</StatusMessage>
+            </PageWrapper>
+        }>
+            <SearchResultsContent />
+        </Suspense>
     );
 }
