@@ -1,6 +1,9 @@
 "use client";
 
 import Link from "next/link";
+// https://nextjs.org/docs/app/api-reference/functions/use-search-params
+// to help with my searching and actually let me use the query
+// for stuff like ?query=batman
 import { useSearchParams } from "next/navigation";
 import MovieCard from "../components/movieCard";
 import { Movie } from "../interfaces/movie";
